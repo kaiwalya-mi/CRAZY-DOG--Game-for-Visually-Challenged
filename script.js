@@ -196,9 +196,9 @@ window.addEventListener('load',function(){
     function displayStatusText(context){
         context.font = '40px Helvetica';
         context.fillStyle = 'black';
-        context.fillText('Score: ' + score , 20, 50);
+        context.fillText('Score: ' + score , 100, 50);
         context.fillStyle = 'white';
-        context.fillText('Score: ' + score , 22, 52);
+        context.fillText('Score: ' + score , 102, 52);
         if (gameOver){
             context.textAlign = 'center';
             context.fillStyle = 'black';
