@@ -10,6 +10,10 @@ window.addEventListener('load',function(){
     class InputHandler {
         constructor(){
             this.keys = [];
+            this.sound=new Audio();
+            this.sound4=new Audio();
+            this.sound.src='beep.wav.ogg';
+            this.sound4.src='boom.wav.ogg ';
             window.addEventListener('keydown', e =>{
                 if((    e.key === 'ArrowDown' ||
                         e.key ==='ArrowUp'||
@@ -17,7 +21,10 @@ window.addEventListener('load',function(){
                         e.key === 'ArrowRight')
                         && this.keys.indexOf(e.key) === -1){
                     this.keys.push(e.key);
-                } else if(e.key === 'Enter' && gameOver) restartGame();
+                    this.sound.play();
+                } else if(e.key === 'Enter' && gameOver){ 
+                    this.sound4.play();
+                    restartGame();}
             });
             this.keys = [];
             window.addEventListener('keyup', e =>{
@@ -49,6 +56,10 @@ window.addEventListener('load',function(){
             this.speed = 0;
             this.vy = 0;
             this.weight =1;
+            this.sound1=new Audio();
+            this.sound2=new Audio();
+            this.sound1.src='GameOver.wav';
+            this.sound2.src='alert.wav';
         }
         restart(){
             this.x = 100;
@@ -57,6 +68,10 @@ window.addEventListener('load',function(){
             this.frameY = 0;
         }
         draw(context){
+           
+            context.beginPath();
+            context.arc(this.x + this.width/2,this.y+this.height/2+20,this.width/3,0,Math.PI * 2);
+           
             context.drawImage(this.image,this.frameX * this.width , 
                 this.frameY * this.width , 
                 this.width,this.height
@@ -65,11 +80,17 @@ window.addEventListener('load',function(){
         update(input, deltaTime,enemies){
             //colision detection
             enemies.forEach(enemy=>{
-                const dx = (enemy.x + enemy.width/2) - (this.x + this.width/2);
-                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2);
+                const dx = (enemy.x + enemy.width/2-20) - (this.x + this.width/2);
+                const dy = (enemy.y + enemy.height/2) - (this.y + this.height/2 +20);
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                if(distance < enemy.width/2 +this.width/2){
+                if(distance < enemy.width/3 +this.width/3){
+                    this.sound1.play();
                     gameOver = true;
+                }
+
+                if(distance < enemy.width/1.1 +this.width/1.1 && this.onGround() && dx>0){
+                    this.sound2.play();
+                    
                 }
             })
             //sprite animation
@@ -155,12 +176,19 @@ window.addEventListener('load',function(){
             this.frameInterval = 1000/this.fps;
             this.speed = 8;
             this.markedForDeletion = false ;
+            this.sound=new Audio();
+            
         }
         draw(context){
             
             context.drawImage(this.image,this.frameX * this.width
                 ,0  ,this.width,this.height
                 ,this.x,this.y,this.width,this.height);
+              
+            
+            context.beginPath();
+            context.arc(this.x + this.width/2-20,this.y+this.height/2+20,this.width/3,0,Math.PI * 2);
+            
         }
         update(deltaTime){
             if(this.frameTimer > this.frameInterval){
@@ -181,7 +209,11 @@ window.addEventListener('load',function(){
     function handleEnemies(deltaTime){
         if(enemyTimer > enemyInterval + randomEnemyInterval){
             enemies.push(new Enemy(canvas.width,canvas.height));
-            randomEnemyInterval = Math.random() * 1000 + 500 ;  
+            randomEnemyInterval = Math.random() * 1000 + 500 ; 
+            // if(enemyInterval + randomEnemyInterval - 1000){
+            //  this.sound.play()
+            // }
+            // soundtimer=0;
             enemyTimer =0 ;
         }else{
             enemyTimer += deltaTime;
@@ -220,7 +252,7 @@ window.addEventListener('load',function(){
     const input = new InputHandler();
     const player = new Player(canvas.width,canvas.height);
     const background = new Background(canvas.width,canvas.height);
-
+    let soundtimer=0;
     let lastTime =0;
     let enemyTimer = 0;
     let enemyInterval =1000;
