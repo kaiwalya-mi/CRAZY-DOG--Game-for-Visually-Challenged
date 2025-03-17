@@ -1,4 +1,4 @@
-                         Project Title:-  Game for Visually  Challenged(Crazy Dog)    
+                         Project Title:- 2d obtsacle Game for Visually  Challenged using sound() javascript library     
 ![background_single1](https://github.com/user-attachments/assets/a3c2171c-1af2-49f6-8660-7fcc92ea169c)
 
 
